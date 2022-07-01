@@ -4,7 +4,7 @@ class Card {
     this.type = type;
     this.color = color;   
     }
-    cardDescription(){
+    describe(){
         return `${this.name} is ${this.type} and ${this.color}.`;
     }
 }
@@ -21,7 +21,7 @@ class Deck {
          throw new Error('Please add a card.')
         }
     }
-    deckDescription(){
+    describe(){
         return `${this.name} is ${this.cards.length} cards.`;
     }
 }
@@ -33,52 +33,53 @@ class deckMenu{
     }
 
     start(){
-        let selection = this.mainMenu();
+        let selection = this.showMainMenu();
         
-        while(selection !== 0){
+        while(selection != 0){
         switch(selection){
             case '1':
-                this.viewAll();
-                break;
-            case '2':
                 this.createDeck();
                 break;
-            case '3':
+            case '2':
                 this.viewDeck();
+                break;
+            case '3':
+                this.displayDeck();
                 break;
             case '4':
                 this.deleteDeck();
                 break;
-                default:
-                    selection = 0;
+            default:
+                selection = 0;
         }
-        selection = this.mainMenu();
+        selection = this.ShowMainMenu();
         }
         alert('Deck building done.');
     }
-    mainMenu(){
+    showMainMenu(){
         return prompt(`
-        0) create new deck
-        1) view deck
-        2) display decks
+        0) exit
+        1) create deck
+        2) view deck
+        3) display deck
         4) delete deck
-                    `);
+            `);
     }
 
-    deckMenuOptions(deckInfo){
+    showDeckMenuOptions(deckInfo){
         return prompt(`
-        0) add card
-        1) delete card
-        2) return
-
+        0) back
+        1) create card
+        2) delete card
+        -----
         ${deckInfo}
-                    `);
+         `);
     }
 
-    viewDecks(){
+    displayDecks(){
         let deckString = '';
         for(let i = 0; i < this.decks.length; i++){
-            deckString += i + ') ' + this.decks[i].name + '\n';
+            deckString += i + ')' + this.decks[i].name + '\n';
         }
         alert(deckString);
     }
@@ -87,31 +88,30 @@ class deckMenu{
         this.decks.push(new Deck(name));
     }
     viewDeck(){
-        let choice = prompt('Enter the number of the deck you want to see');
-        if(choice > -1 && choice < this.decks.length){
-            this.deckSelection = this.decks[choice];
-            let deckList = 'Deck: ' + this.selectedDeck + '\n';
+        let index = prompt('Enter the number of the deck you want to see');
+        if(index > -1 && index < this.decks.length){
+            this.selectedDeck = this.decks[index];
+            let description = 'Deck: ' + this.selectedDeck.name + '\n';
             
             for(let i = 0; i < this.selectedDeck.cards.length; i++){
-                deckList += i + ') ' + this.selectedDeck.cards[i].name 
-                + ' , ' + this.selectedDeck.cards[i].type 
-                + ' , ' + this.selectedDeck.cards[i].color + '\n';
+                description += i + ')' + this.selectedDeck.cards[i].name 
+                + ' - ' + this.selectedDeck.cards[i].type.color + '\n';
             }
-            let selection = this.deckOptions(deckList);
+            let selection = this.showDeckOptions(description);
             switch(selection){
                 case '1':
-                    this.createCard();
+                    this.addCard();
                     break;
                 case '2':
-                    this.deleteCard();
+                    this.removeCard();
             }
         }
     }
 
     deleteDeck(){
-        let choice = prompt('Enter the deck you want to delete.');
-        if(choice > -1 && choice < this.decks.length){
-           this.decks.splice(choice, 1); 
+        let index = prompt('Enter the deck you want to delete.');
+        if(index > -1 && index < this.decks.length){
+           this.decks.splice(index, 1); 
         }
     }
 
@@ -123,9 +123,9 @@ class deckMenu{
     }
 
     removeCard(){
-        let choice = prompt('Enter the selection of card you want to remove.');
-        if(choice > -1 && choice < this.selectedDeck.cards.length){
-            this.selectedDeck.cards.splice(choice, 1);
+        let index = prompt('Enter the selection of card you want to remove.');
+        if(index > -1 && index < this.selectedDeck.cards.length){
+            this.selectedDeck.cards.splice(index, 1);
         }
     }
 
@@ -133,4 +133,3 @@ class deckMenu{
 
 let menu = new deckMenu();
 menu.start();
-
